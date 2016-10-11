@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        ul#gameBox{
+            position: relative;
+            margin: 15px auto;
+            width: 900px;
+            height: 900px;
+        }
+        li{
+            position: absolute;
+            list-style: none;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ffffff;
+            box-sizing: content-box;
+        }
+        ul#gameBox li:nth-child(1){
+            top: 0;left: 0;
+        }
+        ul#gameBox li:nth-child(2){
+            top: 0;left: 300px;
+        }
+        ul#gameBox li:nth-child(3){
+            top: 0;left:600px;
+        }
+        ul#gameBox li:nth-child(4){
+            top: 300px;left: 0;
+        }
+        ul#gameBox li:nth-child(5){
+            top: 300px;left: 300px;
+        }
+        ul#gameBox li:nth-child(6){
+            top:300px;left: 600px;
+        }
+        ul#gameBox li:nth-child(7){
+            top: 600px;left: 0;
+        }
+        ul#gameBox li:nth-child(8){
+            top: 600px;left: 300px;
+        }
+        ul#gameBox li:nth-child(9){
+            top: 600px;left: 600px;
+        }
+    </style>
+</head>
+<body>
+<ul id="gameBox">
+    <li id="li1" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag1" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li2" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag2" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li3" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag3" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li4" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag4" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li5" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag5" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li6" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag6" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li7" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag7" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li8" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag8" draggable="true" ondragstart="drag(event)"/></li>
+    <li id="li9" ondrop="drop(event)"
+        ondragover="allowDrop(event)">
+        <img src="" alt="" id="drag9" draggable="true" ondragstart="drag(event)"/></li>
+</ul>
+    <canvas id="canvas" width="300px" height="300px" style="display: none"></canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+
+        var gameBox = document.getElementById('gameBox');
+        var liArr = gameBox.getElementsByTagName('li');
+
+        var image = new Image();
+        image.src = 'shulan.jpg';
+
+        var flag = false;
+        var index;
+
+        image.onload = function(e){
+            drawImg();
+            randomImg();
+
+
+
+
+        }
+
+        function drawImg(){
+            var index = 1;
+            for(var i = 0;i < 3;i++){
+                for(var j = 0;j < 3;j++){
+                    context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
+                    liArr[index - 1].setAttribute('sql',index);
+                    liArr[index - 1].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
+                    index++;
+                }
+            }
+        }
+
+        function randomImg(){
+            var randomArr = [1,2,3,4,5,6,7,8,9];
+            var index = 1;
+            randomArr.sort(function(a,b){
+                return Math.random()>0.5 ? 1:-1;
+            });
+            for(var i = 0;i < 3;i++){
+                for(var j = 0; j < 3; j++){
+                    context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
+                    liArr[randomArr[index - 1] - 1].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
+                    index++;
+                }
+            }
+        }
+
+
+
+
+        //HTML5拖拉
+        function allowDrop(ev)
+        {
+            ev.preventDefault();
+        }
+
+        function drag(ev)
+        {
+            ev.dataTransfer.setData("oldData",ev.target.id);
+            ev.dataTransfer.setData("newData",ev.srcElement.id);
+        }
+
+        function drop(ev)
+        {
+            ev.preventDefault();
+            console.log(ev);
+            var oldData=ev.dataTransfer.getData("oldData");
+            var newData=ev.dataTransfer.getData("newData");
+            console.log(oldData);
+            console.log(newData)
+            ev.target.appendChild(document.getElementById(oldData));
+            ev.srcElement.appendChild(document.getElementById(newData));
+        }
+
+    </script>
+</body>
+</html>
