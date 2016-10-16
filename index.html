@@ -45,116 +45,113 @@
         ul#gameBox li:nth-child(9){
             top: 600px;left: 600px;
         }
+
     </style>
 </head>
 <body>
 <ul id="gameBox">
-    <li id="li1" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag1" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li2" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag2" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li3" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag3" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li4" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag4" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li5" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag5" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li6" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag6" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li7" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag7" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li8" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag8" draggable="true" ondragstart="drag(event)"/></li>
-    <li id="li9" ondrop="drop(event)"
-        ondragover="allowDrop(event)">
-        <img src="" alt="" id="drag9" draggable="true" ondragstart="drag(event)"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
+    <li><img src="" alt="" draggable="true"/></li>
 </ul>
-    <canvas id="canvas" width="300px" height="300px" style="display: none"></canvas>
+<canvas id="canvas" width="300px" height="300px" style="display: none"></canvas>
 
-    <script>
-        var canvas = document.getElementById('canvas');
-        var context = canvas.getContext('2d');
+<script>
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
 
-        var gameBox = document.getElementById('gameBox');
-        var liArr = gameBox.getElementsByTagName('li');
+    var liArr = document.getElementById('gameBox').getElementsByTagName('li');
 
-        var image = new Image();
-        image.src = 'shulan.jpg';
+    var image = new Image();
+    image.src = 'shulan.jpg';
 
-        var flag = false;
-        var index;
+    var index;
+    var count=0;
 
-        image.onload = function(e){
-            drawImg();
-            randomImg();
+    image.onload = function(e){
 
+        drawImg();
+        randomImg();
+        dragImg();
+    }
 
-
-
-        }
-
-        function drawImg(){
-            var index = 1;
-            for(var i = 0;i < 3;i++){
-                for(var j = 0;j < 3;j++){
-                    context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
-                    liArr[index - 1].setAttribute('sql',index);
-                    liArr[index - 1].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
-                    index++;
-                }
+    //用canvas绘制图片
+    function drawImg(){
+        console.log(liArr[0].offsetWidth);
+        console.log(liArr[0].offsetHeight);
+        var index = 0;
+        for(var i = 0;i < 3;i++){
+            for(var j = 0;j < 3;j++){
+                context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
+                liArr[index].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
+                index++;
             }
         }
+    }
 
-        function randomImg(){
-            var randomArr = [1,2,3,4,5,6,7,8,9];
-            var index = 1;
-            randomArr.sort(function(a,b){
-                return Math.random()>0.5 ? 1:-1;
-            });
-            for(var i = 0;i < 3;i++){
-                for(var j = 0; j < 3; j++){
-                    context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
-                    liArr[randomArr[index - 1] - 1].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
-                    index++;
-                }
+    //打乱图片顺序
+    function randomImg(){
+        var randomArr = [0,1,2,3,4,5,6,7,8];
+        var index = 0;
+        randomArr.sort(function(a,b){
+            return Math.random()>0.5 ? 1:-1;
+        });
+        for(var i = 0;i < 3;i++){
+            for(var j = 0; j < 3; j++){
+                context.drawImage(image,300*j,300*i,300,300,0,0,300,300);
+                liArr[randomArr[index]].getElementsByTagName('img')[0].setAttribute('src',canvas.toDataURL('image/jpeg'));
+                liArr[randomArr[index]].getElementsByTagName('img')[0].setAttribute('id',index);
+                index++;
             }
         }
+    }
 
-
-
-
-        //HTML5拖拉
-        function allowDrop(ev)
-        {
-            ev.preventDefault();
+    //HTML5拖拉
+    function dragImg(){
+        for(var i = 0;i < liArr.length;i++){
+            var src = document.getElementById(i);
+            src.ondragstart = function(e){
+                var dragImgId = e.target.id;
+                var dragImg = document.getElementById(dragImgId);
+                e.dataTransfer.setData("text",dragImgId);
+            }
+            src.ondragover = function(e){
+                e.preventDefault();
+            }
+            src.ondrop = function(e){
+                e.preventDefault();
+                var target = document.getElementById(e.target.id);
+                var dragImg = document.getElementById(e.dataTransfer.getData('text'));
+                var targetParent = target.parentNode;
+                var dragImgParent = dragImg.parentNode;
+                var temp = target;
+                targetParent.removeChild(target);
+                targetParent.appendChild(dragImg);
+                dragImgParent.appendChild(temp);
+                count++;
+                check();
+            }
         }
+    }
 
-        function drag(ev)
-        {
-            ev.dataTransfer.setData("oldData",ev.target.id);
-            ev.dataTransfer.setData("newData",ev.srcElement.id);
+    //判断游戏是否完成
+    function check(){
+        var flag = true;
+        for(var i = 0;i < liArr.length;i++){
+            if(!(liArr[i].getElementsByTagName('img')[0].id == i)){
+                flag = false;
+            }
         }
-
-        function drop(ev)
-        {
-            ev.preventDefault();
-            console.log(ev);
-            var oldData=ev.dataTransfer.getData("oldData");
-            var newData=ev.dataTransfer.getData("newData");
-            console.log(oldData);
-            console.log(newData)
-            ev.target.appendChild(document.getElementById(oldData));
-            ev.srcElement.appendChild(document.getElementById(newData));
+        if(flag){
+            alert("success   "+count);
         }
-
-    </script>
+    }
+</script>
 </body>
 </html>
